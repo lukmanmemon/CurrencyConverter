@@ -9,29 +9,26 @@ var currencyType2 = selCopy.options[selCopy.selectedIndex].value;
 
 sel.addEventListener("change", function(e) {
    currencyType1 = e.target.value;
+   console.log("C1 is: " + currencyType1);
 });
 
 selCopy.addEventListener("change", function(e) {
    currencyType2 = e.target.value;
+   console.log("C2 is: " + currencyType2);
 });
 
-access_key = "Y7oectsUgkH5oeuY5L2JqJn8lo9fIO2IOth9QaEVsFo2svY"; // Your API access key
-symbol = currencyType1 + "/" + currencyType2;
-symbolReversed = currencyType2 + "/" + currencyType1;
-amount = input1.value;
-amount2 = input2.value;
-
-fetch("https://fcsapi.com/api-v2/forex/latest?symbol=" + symbol + "&access_key=" + access_key)
+fetch("https://api.exchangeratesapi.io/latest?base=" + currencyType1 + "&symbols=" + currencyType2)
    .then(response => response.json())
    .then(data => {
-      latestPrice = data.response[0].price;
+      latestPrice = data.rates[currencyType2];
+      console.log(latestPrice);
    });
 
-// execute the conversion using the "converter" endpoint:
-fetch("https://fcsapi.com/api-v2/forex/converter?symbol=" + symbol + "&amount=" + amount + "&access_key=" + access_key)
+fetch("https://api.exchangeratesapi.io/latest?base=" + currencyType2 + "&symbols=" + currencyType1)
    .then(response => response.json())
    .then(data => {
-      updatedAmount = input2.value = (Math.round(data.response.total * 100) / 100).toFixed(2);  
+      latestPrice2 = data.rates[currencyType1];
+      console.log(latestPrice2);
    });
 
 // change input2 text when input1 text is changed
@@ -41,12 +38,6 @@ input1.addEventListener("input", function() {
       input2.value = "";
    }
 });
-
-fetch("https://fcsapi.com/api-v2/forex/latest?symbol=" + symbolReversed + "&access_key=" + access_key)
-   .then(response => response.json())
-   .then(data => {
-      latestPrice2 = data.response[0].price; 
-   });
 
 // change input1 text when input2 text is changed
 input2.addEventListener("input", function() {
