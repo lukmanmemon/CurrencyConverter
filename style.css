@@ -6,5 +6,17 @@ body {
 
 h1 {
     color: springgreen;
-    
 }
+
+input {
+    background-color: lightgray;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+select {
+    background-color: black;
+    color: springgreen;
+    padding: 5px;
+}
+
