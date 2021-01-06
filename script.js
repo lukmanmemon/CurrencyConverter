@@ -114,18 +114,20 @@ function BuildChart(labels, values, chartTitle) {
    var data = {
        labels: labels,
        datasets: [{
-           label: chartTitle, 
+           label: chartTitle, // Name the series
            data: values,
            backgroundColor: 'lightgrey',
            borderColor: 'darkblue',
-           pointBackgroundColor: 'white'
-               
-           
+           pointBackgroundColor: 'white',
+
        }],
    };
 
    var ctx = document.getElementById("myChart").getContext('2d');
-   var myChart = new Chart(ctx, {
+   if (window.bar != undefined) {
+      window.bar.destroy(); 
+   }
+   window.bar = new Chart(ctx, {
        type: 'line',
        data: data,
        options: {
@@ -133,22 +135,25 @@ function BuildChart(labels, values, chartTitle) {
            maintainAspectRatio: true, 
            scales: {
                xAxes: [{
-                       scaleLabel: {
-                       display: true,
-                       labelString: 'Date'
-                   }
+                  scaleLabel: {
+                     display: true
+                  },
+                  gridLines: {
+                     display: false
+                  }
                }],
                yAxes: [{
-                   scaleLabel: {
-                       display: true,
-                       labelString: 'Currency Rate'
-                   }
+                  scaleLabel: {
+                     display: true    
+                  },
+                  gridLines: {
+                     display: false
+                  }
                }]
            },
        }
    });
 
-   return myChart;
 }
 
 function plotGraph() {

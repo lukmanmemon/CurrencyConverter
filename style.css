@@ -14,6 +14,7 @@ input {
     font-weight: bold;
     font-size: large;
     border-radius: 10px;
+    width: 15%;
 }
 
 select {
@@ -24,9 +25,18 @@ select {
 }
 
 canvas {
-    position: fixed;
-    top: 25%;
-    left: 30%;
+    display: block;
+    margin: 0 auto;
+    width: 40%;
+}
+
+
+#start {
+    margin-right: 10px;
+}
+
+#dateSelection {
+    margin-top: 10px;
 }
 
 
