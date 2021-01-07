@@ -61,7 +61,6 @@ var inputDate1 = document.getElementById("start");
 var inputDate2 = document.getElementById("end");
 
 var today = new Date();
-
 var dd = String("0" + today.getDate()).slice(-2);
 var mm = String("0" + today.getMonth() + 1).slice(-2);
 var yyyy = String(today.getFullYear());
@@ -79,36 +78,38 @@ function getHistoricalData() {
    .then(response => response.json())
    .then(data => {
       historicalRate = data.rates;
-      d = [];
-      c = [];
+      arrayOfDates = [];
+      arrayOfValues = [];
       for(let date in historicalRate) {
-         d.push(date);
+         arrayOfDates.push(date);
          currencyValue = historicalRate[date];
          for(let key in currencyValue) {
-            c.push(currencyValue[key]);
+            arrayOfValues.push(currencyValue[key]);
          }
       }
-      console.log(d);
-      console.log(c);
+      
    });
 }
-
-
-
 
 inputDate1.addEventListener("change", function() {
    startDate = this.value;
    getHistoricalData();
    plotGraph();
+   incorrectDateRange();
 });
 
 inputDate2.addEventListener("change", function() {
    endDate = this.value;
    getHistoricalData();
    plotGraph();
-
+   incorrectDateRange();
 });
 
+function incorrectDateRange() {
+   if (Date.parse(startDate) >= Date.parse(endDate)) {
+      alert(startDate + " to " + endDate + " is an invalid range");
+   }
+}
 
 function BuildChart(labels, values, chartTitle) {
    var data = {
@@ -119,7 +120,7 @@ function BuildChart(labels, values, chartTitle) {
            backgroundColor: 'lightgrey',
            borderColor: 'darkblue',
            pointBackgroundColor: 'white',
-
+           pointHoverBackgroundColor: 'aqua'
        }],
    };
 
@@ -132,7 +133,15 @@ function BuildChart(labels, values, chartTitle) {
        data: data,
        options: {
            responsive: false, 
-           maintainAspectRatio: true, 
+           maintainAspectRatio: true,
+           elements: {
+               line: {
+                  tension: 0 // disable curves
+               },
+               point: {
+                  radius: 1
+               }
+           }, 
            scales: {
                xAxes: [{
                   scaleLabel: {
@@ -147,7 +156,7 @@ function BuildChart(labels, values, chartTitle) {
                      display: true    
                   },
                   gridLines: {
-                     display: false
+                     display: true
                   }
                }]
            },
@@ -161,24 +170,25 @@ function plotGraph() {
    xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
          var data = JSON.parse(this.response);
-         historicalRate = data.rates;
-         d = [];
-         c = [];
-         for(let date in historicalRate) {
-            d.push(date);
-            currencyValue = historicalRate[date];
-            for(let key in currencyValue) {
-            c.push(currencyValue[key]);
+         historicalRates = data.rates;
+         // Sort JSON Object by date
+         function sortObjectByKeys(o) {
+            return Object.keys(o).sort().reduce((r, k) => (r[k] = o[k], r), {});
+         }
+         var sortedData = sortObjectByKeys(historicalRates);
+         arrayOfDates = [];
+         arrayOfValues = [];
+         for (let date in sortedData) {
+            arrayOfDates.push(date);
+            currencyValue = sortedData[date];
+            for (let key in currencyValue) {
+            arrayOfValues.push(currencyValue[key]);
             }
          }
-         console.log(d);
-         console.log(c);
-
          // Set dates for graph
-         var labels = d;
-      
+         var labels = arrayOfDates;
          // Set values for graph
-         var values = c;
+         var values = arrayOfValues;
 
          BuildChart(labels, values, "Currency conversion rate");
       }

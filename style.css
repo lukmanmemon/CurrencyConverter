@@ -5,7 +5,7 @@ body {
 }
 
 h1 {
-    color: darkblue;    
+    color: darkblue;
 }
 
 input {
@@ -14,7 +14,6 @@ input {
     font-weight: bold;
     font-size: large;
     border-radius: 10px;
-    width: 15%;
 }
 
 select {
@@ -24,10 +23,13 @@ select {
     padding: 5px;
 }
 
+#currencyList2 {
+    margin-bottom: 15px;
+}
+
 canvas {
     display: block;
     margin: 0 auto;
-    width: 40%;
 }
 
 
@@ -36,9 +38,5 @@ canvas {
 }
 
 #dateSelection {
-    margin-top: 10px;
+    margin: 10px 10px;
 }
-
-
-
-
