@@ -1,10 +1,9 @@
 var input1 = document.getElementById("currentCurrency");
 var input2 = document.getElementById("desiredCurrency");
 
-// get the currency name that is selected from the drop-down lists
+// Get the currency name that is selected from the drop-down lists
 var sel = document.getElementById("currencyList1");
 var selCopy = document.getElementById("currencyList2");
-
 var currencyType1 = sel.options[sel.selectedIndex].value;
 var currencyType2 = selCopy.options[selCopy.selectedIndex].value;
 
@@ -33,7 +32,7 @@ selCopy.addEventListener("change", function() {
 
 getUpdatedValue();  
 
-// change input2 text when input1 text changes
+// Change input2 text when input1 text changes
 input1.addEventListener("input", function() {
    input2.value = (Math.round(input1.value * latestPrice * 100) / 100).toFixed(2);
    if (input1.value == "") {
@@ -47,7 +46,7 @@ fetch("https://api.exchangeratesapi.io/latest?base=" + currencyType2 + "&symbols
       latestPrice2 = data.rates[currencyType1];
    });
 
-// change input1 text when input2 text changes
+// Change input1 text when input2 text changes
 input2.addEventListener("input", function() {
    input1.value = (Math.round(input2.value * latestPrice2 * 100) / 100).toFixed(2);
    if (input2.value == "") {
@@ -57,27 +56,34 @@ input2.addEventListener("input", function() {
 
 var inputDate1 = document.getElementById("start");
 var inputDate2 = document.getElementById("end");
-// Get today's date
+
 var today = new Date();
 var dd = String("0" + today.getDate()).slice(-2);
 var mm = String("0" + today.getMonth() + 1).slice(-2);
 var yyyy = String(today.getFullYear());
-today = yyyy + '-' + mm + '-' + dd;
-// Get date from one month ago
-var monthAgo = new Date();
-monthAgo.setDate(monthAgo.getDate() - 30);
-var ddOld = String("0" + monthAgo.getDate()).slice(-2);
-var mmOld = String("0" + monthAgo.getMonth() + 2).slice(-2);
-var yyyyOld = String(monthAgo.getFullYear());
-monthAgoDate = yyyyOld + '-' + mmOld + '-' + ddOld;
-console.log(monthAgo);
-console.log(monthAgoDate);
-// sets the latest date user can select as today's date
+
+var oneYearAgo = new Date();
+var yyyyOld = String(oneYearAgo.getFullYear() - 1);
+
+// Get today's date
+function getTodaysDate() {
+   today = yyyy + '-' + mm + '-' + dd;
+   inputDate2.value = today;
+}
+
+// Get date from one year ago
+function getYearOldDate() {
+   oneYearAgo = yyyyOld + '-' + mm + '-' + dd;
+   inputDate1.value = oneYearAgo;
+}
+
+getTodaysDate();
+getYearOldDate();
+
+// Sets the latest date user can select as today's date
 document.getElementById("end").setAttribute("max", today);
 document.getElementById("start").setAttribute("max", today);
 
-inputDate1.value = monthAgoDate;
-inputDate2.value = today;
 var startDate = inputDate1.value;
 var endDate = inputDate2.value;
 
@@ -103,7 +109,7 @@ function BuildChart(labels, values, chartTitle) {
    var data = {
        labels: labels,
        datasets: [{
-           label: chartTitle, // Name the series
+           label: chartTitle,
            data: values,
            backgroundColor: 'lightgrey',
            borderColor: 'darkblue',
