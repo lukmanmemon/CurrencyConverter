@@ -21,16 +21,14 @@ function getUpdatedValue() {
 sel.addEventListener("change", function() {
    currencyType1 = this.value;
    getUpdatedValue();
-   getHistoricalData();
-   plotGraph();
+   plotChart();
 });
 
 // When currencyType2 changes
 selCopy.addEventListener("change", function() {
    currencyType2 = this.value;
    getUpdatedValue();
-   getHistoricalData();
-   plotGraph();
+   plotChart();
 });
 
 getUpdatedValue();  
@@ -59,55 +57,45 @@ input2.addEventListener("input", function() {
 
 var inputDate1 = document.getElementById("start");
 var inputDate2 = document.getElementById("end");
-
+// Get today's date
 var today = new Date();
 var dd = String("0" + today.getDate()).slice(-2);
 var mm = String("0" + today.getMonth() + 1).slice(-2);
 var yyyy = String(today.getFullYear());
 today = yyyy + '-' + mm + '-' + dd;
+// Get date from one month ago
+var monthAgo = new Date();
+monthAgo.setDate(monthAgo.getDate() - 30);
+var ddOld = String("0" + monthAgo.getDate()).slice(-2);
+var mmOld = String("0" + monthAgo.getMonth() + 2).slice(-2);
+var yyyyOld = String(monthAgo.getFullYear());
+monthAgoDate = yyyyOld + '-' + mmOld + '-' + ddOld;
+console.log(monthAgo);
+console.log(monthAgoDate);
 // sets the latest date user can select as today's date
 document.getElementById("end").setAttribute("max", today);
 document.getElementById("start").setAttribute("max", today);
 
+inputDate1.value = monthAgoDate;
 inputDate2.value = today;
 var startDate = inputDate1.value;
 var endDate = inputDate2.value;
 
-function getHistoricalData() {
-   fetch("https://api.exchangeratesapi.io/history?start_at=" + startDate + "&end_at=" + endDate + "&symbols=" + currencyType2 + "&base=" + currencyType1)
-   .then(response => response.json())
-   .then(data => {
-      historicalRate = data.rates;
-      arrayOfDates = [];
-      arrayOfValues = [];
-      for(let date in historicalRate) {
-         arrayOfDates.push(date);
-         currencyValue = historicalRate[date];
-         for(let key in currencyValue) {
-            arrayOfValues.push(currencyValue[key]);
-         }
-      }
-      
-   });
-}
-
 inputDate1.addEventListener("change", function() {
    startDate = this.value;
-   getHistoricalData();
-   plotGraph();
+   plotChart();
    incorrectDateRange();
 });
 
 inputDate2.addEventListener("change", function() {
    endDate = this.value;
-   getHistoricalData();
-   plotGraph();
+   plotChart();
    incorrectDateRange();
 });
 
 function incorrectDateRange() {
    if (Date.parse(startDate) >= Date.parse(endDate)) {
-      alert(startDate + " to " + endDate + " is an invalid range");
+      alert(startDate + " to " + endDate + " is an invalid range.\n\n Please select the correct start and end dates.");
    }
 }
 
@@ -120,7 +108,7 @@ function BuildChart(labels, values, chartTitle) {
            backgroundColor: 'lightgrey',
            borderColor: 'darkblue',
            pointBackgroundColor: 'white',
-           pointHoverBackgroundColor: 'aqua'
+           pointHoverBackgroundColor: 'cyan'
        }],
    };
 
@@ -165,7 +153,7 @@ function BuildChart(labels, values, chartTitle) {
 
 }
 
-function plotGraph() {
+function plotChart() {
    var xhttp = new XMLHttpRequest();
    xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
@@ -197,6 +185,4 @@ function plotGraph() {
    xhttp.send();
  }
 
- plotGraph();
-
-
+ plotChart();
