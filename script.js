@@ -16,10 +16,22 @@ function getUpdatedValue() {
       });
 }
 
+function getUpdatedValue2() {
+   fetch("https://api.exchangeratesapi.io/latest?base=" + currencyType2 + "&symbols=" + currencyType1)
+      .then(response => response.json())
+      .then(data => {
+         latestPrice2 = data.rates[currencyType1];
+      });
+}
+
+getUpdatedValue();
+getUpdatedValue2();
+
 // When currencyType1 changes
 sel.addEventListener("change", function() {
    currencyType1 = this.value;
    getUpdatedValue();
+   getUpdatedValue2();
    plotChart();
 });
 
@@ -27,10 +39,9 @@ sel.addEventListener("change", function() {
 selCopy.addEventListener("change", function() {
    currencyType2 = this.value;
    getUpdatedValue();
+   getUpdatedValue2();
    plotChart();
 });
-
-getUpdatedValue();  
 
 // Change input2 text when input1 text changes
 input1.addEventListener("input", function() {
@@ -39,12 +50,6 @@ input1.addEventListener("input", function() {
       input2.value = "";
    }
 });
-
-fetch("https://api.exchangeratesapi.io/latest?base=" + currencyType2 + "&symbols=" + currencyType1)
-   .then(response => response.json())
-   .then(data => {
-      latestPrice2 = data.rates[currencyType1];
-   });
 
 // Change input1 text when input2 text changes
 input2.addEventListener("input", function() {
