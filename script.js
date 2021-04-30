@@ -7,22 +7,20 @@ var selCopy = document.getElementById("currencyList2");
 var currencyType1 = sel.options[sel.selectedIndex].value;
 var currencyType2 = selCopy.options[selCopy.selectedIndex].value;
 
-var API_KEY = "d79f58fe14fc42d59b5c";
-
 function getUpdatedValue() {
-   fetch("https://free.currconv.com/api/v7/convert?q=" + currencyType1 + "_" + currencyType2 + "&compact=ultra&apiKey=" + API_KEY)
+   fetch("https://api.frankfurter.app/latest?from=" + currencyType1 + "&to=" + currencyType2)
       .then(response => response.json())
       .then(data => {
-         latestPrice = data[currencyType1 + "_" + currencyType2];
+         latestPrice = data.rates[currencyType2];
          input2.value = (Math.round(input1.value * latestPrice * 100) / 100).toFixed(2);
       });
 }
 
 function getUpdatedValue2() {
-   fetch("https://free.currconv.com/api/v7/convert?q=" + currencyType2 + "_" + currencyType1 + "&compact=ultra&apiKey=" + API_KEY)
+   fetch("https://api.frankfurter.app/latest?from=" + currencyType2 + "&to=" + currencyType1)
       .then(response => response.json())
       .then(data => {
-         latestPrice2 = data[currencyType2 + "_" + currencyType1];
+         latestPrice2 = data.rates[currencyType1];
       });
 }
 
@@ -64,24 +62,19 @@ input2.addEventListener("input", function() {
 var inputDate1 = document.getElementById("start");
 var inputDate2 = document.getElementById("end");
 
-var today = new Date();
-var dd = String("0" + today.getDate()).slice(-2);
-var mm = String("0" + today.getMonth() + 1).slice(-2);
-var yyyy = String(today.getFullYear());
-
-var oneYearAgo = new Date();
-var yyyyOld = String(oneYearAgo.getFullYear() - 1);
+var today = new Date().toISOString().slice(0, 10);
+var priorDate = new Date(); 
 
 // Get today's date
 function getTodaysDate() {
-   today = yyyy + '-' + mm + '-' + dd;
    inputDate2.value = today;
 }
 
 // Get date from one year ago
 function getYearOldDate() {
-   oneYearAgo = yyyyOld + '-' + mm + '-' + dd;
-   inputDate1.value = oneYearAgo;
+   var oneYearAgo = priorDate.getDate() - 365;
+   priorDate.setDate(oneYearAgo);
+   inputDate1.value = priorDate.toISOString().slice(0, 10);
 }
 
 getTodaysDate();
@@ -172,16 +165,12 @@ function plotChart() {
       if (this.readyState == 4 && this.status == 200) {
          var data = JSON.parse(this.response);
          historicalRates = data.rates;
-         // Sort JSON Object by date
-         function sortObjectByKeys(o) {
-            return Object.keys(o).sort().reduce((r, k) => (r[k] = o[k], r), {});
-         }
-         var sortedData = sortObjectByKeys(historicalRates);
+
          arrayOfDates = [];
          arrayOfValues = [];
-         for (let date in sortedData) {
+         for (let date in historicalRates) {
             arrayOfDates.push(date);
-            currencyValue = sortedData[date];
+            currencyValue = historicalRates[date];
             for (let key in currencyValue) {
                arrayOfValues.push(currencyValue[key]);
             }
@@ -194,7 +183,7 @@ function plotChart() {
          BuildChart(labels, values, "Currency conversion rate");
       }
    };
-   xhttp.open("GET", "https://api.exchangeratesapi.io/history?start_at=" + startDate + "&end_at=" + endDate + "&symbols=" + currencyType2 + "&base=" + currencyType1, true);
+   xhttp.open("GET", "https://api.frankfurter.app/" + startDate + ".." + endDate + "?from=" + currencyType1 + "&to=" + currencyType2, true);
    xhttp.send();
  }
 
