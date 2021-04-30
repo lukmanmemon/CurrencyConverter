@@ -7,20 +7,22 @@ var selCopy = document.getElementById("currencyList2");
 var currencyType1 = sel.options[sel.selectedIndex].value;
 var currencyType2 = selCopy.options[selCopy.selectedIndex].value;
 
+var API_KEY = "d79f58fe14fc42d59b5c";
+
 function getUpdatedValue() {
-   fetch("https://api.exchangeratesapi.io/latest?base=" + currencyType1 + "&symbols=" + currencyType2)
+   fetch("https://free.currconv.com/api/v7/convert?q=" + currencyType1 + "_" + currencyType2 + "&compact=ultra&apiKey=" + API_KEY)
       .then(response => response.json())
       .then(data => {
-         latestPrice = data.rates[currencyType2];
+         latestPrice = data[currencyType1 + "_" + currencyType2];
          input2.value = (Math.round(input1.value * latestPrice * 100) / 100).toFixed(2);
       });
 }
 
 function getUpdatedValue2() {
-   fetch("https://api.exchangeratesapi.io/latest?base=" + currencyType2 + "&symbols=" + currencyType1)
+   fetch("https://free.currconv.com/api/v7/convert?q=" + currencyType2 + "_" + currencyType1 + "&compact=ultra&apiKey=" + API_KEY)
       .then(response => response.json())
       .then(data => {
-         latestPrice2 = data.rates[currencyType1];
+         latestPrice2 = data[currencyType2 + "_" + currencyType1];
       });
 }
 
@@ -181,7 +183,7 @@ function plotChart() {
             arrayOfDates.push(date);
             currencyValue = sortedData[date];
             for (let key in currencyValue) {
-            arrayOfValues.push(currencyValue[key]);
+               arrayOfValues.push(currencyValue[key]);
             }
          }
          // Set dates for graph
