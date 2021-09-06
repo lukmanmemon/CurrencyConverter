@@ -38,3 +38,24 @@ canvas {
 #dateSelection {
     margin: 10px 10px;
 }
+
+@media only screen and (max-width: 600px) {
+    h1 { 
+        font-size: 22px;
+    }
+
+    input {
+        width: 75%;
+        height: 10%;
+    }
+
+    select {
+        width: 15%;
+        height: 10%;
+    }
+
+    canvas {
+        width: 80%;
+        height: 40%;
+    }
+  }
