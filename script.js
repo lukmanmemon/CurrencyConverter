@@ -14,6 +14,8 @@ function inputValidation(input) {
       }
    }
 }
+inputValidation(input1);
+inputValidation(input2);
 
 function getUpdatedValue() {
    fetch("https://api.frankfurter.app/latest?from=" + currencyType1 + "&to=" + currencyType2)
@@ -53,7 +55,6 @@ selCopy.addEventListener("change", function() {
 
 // Change input2 text when input1 text changes
 input1.addEventListener("input", function() {
-   inputValidation(input1);
    input2.value = (Math.round(input1.value * latestPrice * 100) / 100).toFixed(2);
    if (input1.value == "") {
       input2.value = "";
@@ -62,7 +63,6 @@ input1.addEventListener("input", function() {
 
 // Change input1 text when input2 text changes
 input2.addEventListener("input", function() {
-   inputValidation(input2);
    input1.value = (Math.round(input2.value * latestPrice2 * 100) / 100).toFixed(2);
    if (input2.value == "") {
      input1.value = "";
