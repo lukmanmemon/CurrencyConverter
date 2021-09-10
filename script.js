@@ -7,6 +7,14 @@ var selCopy = document.getElementById("currencyList2");
 var currencyType1 = sel.options[sel.selectedIndex].value;
 var currencyType2 = selCopy.options[selCopy.selectedIndex].value;
 
+function inputValidation(input) {
+   input.onkeydown = function(e) {
+      if (e.keyCode == 189) {
+          return false;
+      }
+   }
+}
+
 function getUpdatedValue() {
    fetch("https://api.frankfurter.app/latest?from=" + currencyType1 + "&to=" + currencyType2)
       .then(response => response.json())
@@ -45,6 +53,7 @@ selCopy.addEventListener("change", function() {
 
 // Change input2 text when input1 text changes
 input1.addEventListener("input", function() {
+   inputValidation(input1);
    input2.value = (Math.round(input1.value * latestPrice * 100) / 100).toFixed(2);
    if (input1.value == "") {
       input2.value = "";
@@ -53,6 +62,7 @@ input1.addEventListener("input", function() {
 
 // Change input1 text when input2 text changes
 input2.addEventListener("input", function() {
+   inputValidation(input2);
    input1.value = (Math.round(input2.value * latestPrice2 * 100) / 100).toFixed(2);
    if (input2.value == "") {
      input1.value = "";
