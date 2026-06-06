@@ -193,7 +193,7 @@ function plotChart() {
          BuildChart(labels, values, "Currency conversion rate");
       }
    };
-   xhttp.open("GET", "https://api.frankfurter.dev/v1" + startDate + ".." + endDate + "?base=" + currencyType1 + "&symbols=" + currencyType2, true);
+   xhttp.open("GET", "https://api.frankfurter.dev/v1/" + startDate + ".." + endDate + "?base=" + currencyType1 + "&symbols=" + currencyType2, true);
    xhttp.send();
  }
 
