@@ -18,7 +18,7 @@ inputValidation(input1);
 inputValidation(input2);
 
 function getUpdatedValue() {
-   fetch("https://api.frankfurter.dev/latest?from=" + currencyType1 + "&to=" + currencyType2)
+   fetch("https://api.frankfurter.dev/v1/latest?base=" + currencyType1 + "&symbols=" + currencyType2)
       .then(response => response.json())
       .then(data => {
          latestPrice = data.rates[currencyType2];
@@ -27,7 +27,7 @@ function getUpdatedValue() {
 }
 
 function getUpdatedValue2() {
-   fetch("https://api.frankfurter.dev/latest?from=" + currencyType2 + "&to=" + currencyType1)
+   fetch("https://api.frankfurter.dev/v1/latest?base=" + currencyType2 + "&symbols=" + currencyType1)
       .then(response => response.json())
       .then(data => {
          latestPrice2 = data.rates[currencyType1];
@@ -193,7 +193,7 @@ function plotChart() {
          BuildChart(labels, values, "Currency conversion rate");
       }
    };
-   xhttp.open("GET", "https://api.frankfurter.dev/" + startDate + ".." + endDate + "?from=" + currencyType1 + "&to=" + currencyType2, true);
+   xhttp.open("GET", "https://api.frankfurter.dev/v1" + startDate + ".." + endDate + "?base=" + currencyType1 + "&symbols=" + currencyType2, true);
    xhttp.send();
  }
 
